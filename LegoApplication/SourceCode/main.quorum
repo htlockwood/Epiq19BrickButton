@@ -1,0 +1,47 @@
+use Libraries.Robots.Lego.Button
+use Libraries.Robots.Lego.Sound
+use Libraries.Robots.Lego.Screen
+use Libraries.Robots.Lego.Battery
+
+Button buttonCtrl
+Sound soundCtrl
+Screen screenCtrl
+Battery battery
+
+integer volume=50
+soundCtrl:SetVolume(volume)
+
+repeat until buttonCtrl:IsButtonPressed(buttonCtrl:CENTER_BUTTON)
+soundCtrl:PlayTone(880, 20)
+screenCtrl:OutputCenterLarge("TIM's", 1)
+soundCtrl:PlayTone(440, 20)
+screenCtrl:OutputCenterLarge("Brick", 3)
+soundCtrl:PlayTone(220, 20)
+screenCtrl:OutputCenterLarge("Buttons", 5)
+soundCtrl:Beep()
+screenCtrl:OutputCenter("CENTER to Start", 75)
+end
+
+buttonCtrl:SetLightPattern(3)
+repeat until buttonCtrl:IsButtonPressed(buttonCtrl:ESCAPE_BUTTON)
+number current = battery:GetCurrent()
+number voltage = battery:GetVoltage()
+
+    if buttonCtrl:IsButtonPressed(buttonCtrl:LEFT_BUTTON)
+        screenCtrl:Output("current =" + current, 1)
+    elseif buttonCtrl:IsButtonPressed(buttonCtrl:RIGHT_BUTTON)
+        screenCtrl:Output("Volts =" + voltage, 2)
+    elseif buttonCtrl:IsButtonPressed(buttonCtrl:UP_BUTTON)
+       volume=volume+10 
+       soundCtrl:SetVolume(volume)
+       soundCtrl:BeepSequenceUp()
+    elseif buttonCtrl:IsButtonPressed(buttonCtrl:DOWN_BUTTON)
+       volume=volume-10 
+       soundCtrl:SetVolume(volume)
+       soundCtrl:BeepSequenceUp()
+       soundCtrl:BeepSequenceDown()
+    elseif buttonCtrl:IsButtonPressed(buttonCtrl:CENTER_BUTTON)
+        soundCtrl:BeepTwice()
+    end
+end
+soundCtrl:Buzz()
