@@ -1,33 +1,61 @@
-use Libraries.Robots.Lego.Button
+//This is a program you can run with no mortors or sensors using just the brick.
+use Libraries.Robots.Lego.Button // libraries save time and space, just like Dr. Who.
 use Libraries.Robots.Lego.Sound
 use Libraries.Robots.Lego.Screen
 use Libraries.Robots.Lego.Battery
+use Libraries.Robots.Lego.Utility 
 
-Button buttonCtrl
+Button buttonCtrl //to use the libraries we must instcate them so we have a name to call them by.
 Sound soundCtrl
 Screen screenCtrl
 Battery battery
+Utility utility
 
-integer volume=50
-soundCtrl:SetVolume(volume)
+integer volume=20 //seting up a few varibles
+integer light =0
 
-repeat until buttonCtrl:IsButtonPressed(buttonCtrl:CENTER_BUTTON)
+soundCtrl:SetVolume(volume)//using the varible to set a paramiter 
+
+repeat until buttonCtrl:IsButtonPressed(buttonCtrl:CENTER_BUTTON) //Loop
 soundCtrl:PlayTone(880, 20)
-screenCtrl:OutputCenterLarge("TIM's", 1)
+screenCtrl:OutputCenter("TIM's", 1)
 soundCtrl:PlayTone(440, 20)
-screenCtrl:OutputCenterLarge("Brick", 3)
+screenCtrl:OutputCenter("Brick", 2)
 soundCtrl:PlayTone(220, 20)
-screenCtrl:OutputCenterLarge("Buttons", 5)
+screenCtrl:OutputCenter("Buttons", 3)
 soundCtrl:Beep()
-screenCtrl:OutputCenter("CENTER to Start", 75)
-end
-
-buttonCtrl:SetLightPattern(3)
-repeat until buttonCtrl:IsButtonPressed(buttonCtrl:ESCAPE_BUTTON)
+screenCtrl:OutputCenter("CENTER to Start", 4)
+end //end of the repeat until, it will repeat what happends here un till the condition is met. 
+        //This is a block of scrolling text that gives user info and waits while it is read
+screenCtrl:Clear()
+screenCtrl:ScrollUp("Left button = Volts")
+utility:DelayMilliseconds(500)
+screenCtrl:ScrollUp("Right button = Current")
+utility:DelayMilliseconds(500)
+screenCtrl:ScrollUp("Up button = Louder")
+utility:DelayMilliseconds(500)
+screenCtrl:ScrollUp("Down button = Softer")
+utility:DelayMilliseconds(500)
+screenCtrl:ScrollUp("Center button = Change colored light")
+utility:DelayMilliseconds(500)
+screenCtrl:ScrollUp("Left button = Volts")
+utility:DelayMilliseconds(500)
+screenCtrl:ScrollUp("Escape button = quit")
+utility:DelayMilliseconds(500)
+screenCtrl:ScrollUp("............................")
+screenCtrl:ScrollUp("press any button to countine")
+screenCtrl:ScrollUp("............................")
+buttonCtrl:WaitForButtonPress()
+screenCtrl:Clear()
+    //End of scrolling block
+buttonCtrl:SetLightPattern(light)
+   //starts the program 
+repeat until buttonCtrl:IsButtonPressed(buttonCtrl:ESCAPE_BUTTON)//loop see last end
 number current = battery:GetCurrent()
 number voltage = battery:GetVoltage()
-
-    if buttonCtrl:IsButtonPressed(buttonCtrl:LEFT_BUTTON)
+ screenCtrl:Output("light#: " + light, 3)
+ screenCtrl:Output("Volume =" + volume +"%", 5)
+   if buttonCtrl:IsButtonPressed(buttonCtrl:LEFT_BUTTON) //if and elseif are powerful
         screenCtrl:Output("current =" + current, 1)
     elseif buttonCtrl:IsButtonPressed(buttonCtrl:RIGHT_BUTTON)
         screenCtrl:Output("Volts =" + voltage, 2)
@@ -38,10 +66,19 @@ number voltage = battery:GetVoltage()
     elseif buttonCtrl:IsButtonPressed(buttonCtrl:DOWN_BUTTON)
        volume=volume-10 
        soundCtrl:SetVolume(volume)
-       soundCtrl:BeepSequenceUp()
        soundCtrl:BeepSequenceDown()
     elseif buttonCtrl:IsButtonPressed(buttonCtrl:CENTER_BUTTON)
+       light = light+1
+       buttonCtrl:SetLightPattern(light)
         soundCtrl:BeepTwice()
-    end
-end
+        screenCtrl:Clear()
+        screenCtrl:DrawRectangleFull(60, 80, 20, 20)
+        screenCtrl:DrawRectangleFull(116, 80, 20, 25)
+        screenCtrl:DrawLine(40, 40, 136, 40)
+        screenCtrl:DrawLine(40, 40, 40, 50)
+        screenCtrl:DrawLine(136, 40, 136, 50)
+        buttonCtrl:WaitForButtonPress()
+        screenCtrl:Clear()
+    end//end of the IF set
+end//end of repeat until
 soundCtrl:Buzz()
